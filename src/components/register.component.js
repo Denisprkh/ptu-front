@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import {connect} from 'react-redux';
 
 import { registerUser} from "../redux/actions/authActionCreators";
+import {Redirect, useHistory} from "react-router";
+import ConfirmationPage from "../pages/confirmationpage.component";
 
 const RegisterForm = ({dispatchRegisterAction}) => {
 
@@ -9,23 +11,26 @@ const RegisterForm = ({dispatchRegisterAction}) => {
     const [lastName, setLastName] = useState('');
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+    const history = useHistory();
 
     const handleOnSubmit = (event) => {
         event.preventDefault();
-        dispatchRegisterAction(firstName, lastName, login, password, () => console.log('Account created!'),
-            (message) => console.log("error"));
+        dispatchRegisterAction(firstName, lastName, login, password, () => {
+            let redirectTo = "/confirmation";
+            history.push(redirectTo);
+            } ,
+            (message) => console.log({message}));
     }
 
     return (
         <React.Fragment>
-            <h2>Новый пользователь?</h2>
-            <h4>Зарегистрируйтесь здесь</h4>
             <br/>
             <main className="form-signin">
                 <form onSubmit={handleOnSubmit}>
                     <div className="form-group">
                         <label htmlFor="firstName">Имя</label>
                         <input type="text" className="form-control mt-2 mb-2" placeholder="Имя" required
+                               pattern="^[a-zA-Zа-яА-Я]{2,50}$" title="Имя может содержать только строчные символы"
                                name="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)}
                         />
                     </div>
@@ -33,6 +38,7 @@ const RegisterForm = ({dispatchRegisterAction}) => {
                     <div className="form-group">
                         <label htmlFor="lastName">Фамилия</label>
                         <input type="text" className="form-control mt-2 mb-2" placeholder="Фамилия" required
+                               pattern="^[a-zA-Zа-яА-Я]{2,50}$" title="Фамилия может содержать только строчные символы"
                                name="lastNae" value={lastName} onChange={(e) => setLastName(e.target.value)}
                         />
                     </div>
@@ -58,7 +64,7 @@ const RegisterForm = ({dispatchRegisterAction}) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-        dispatchRegisterAction : (firstName, lastName, login, password, onSuccess, onError) =>
-        dispatch(registerUser({firstName, lastName, login, password}, onSuccess, onError))
+        dispatchRegisterAction : (firstName, lastName, login, password, onSuccess) =>
+        dispatch(registerUser({firstName, lastName, login, password}, onSuccess))
 });
 export default connect(null, mapDispatchToProps)(RegisterForm);

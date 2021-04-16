@@ -1,15 +1,24 @@
 import * as constants from './../constants';
+import ConfirmationPage from "../../pages/confirmationpage.component";
 
-export const registerUser = (data, onSuccess, onError) => ({
+export const registerUser = (data, onSuccess) => ({
    type: constants.API,
    payload: {
        method: 'POST',
        url: 'users/signUp',
        data,
-       success: (response) => (setUserInfo(response)),
-       postProcessSuccess: onSuccess,
-       postProcessError: onError
+       postProcessSuccess: onSuccess
    }
+});
+
+export const confirmRegistration = (data, onSuccess, onError) => ({
+    type: constants.API,
+    payload: {
+        method: 'GET',
+        url: `users/signUp/confirm?token=${data.token}`,
+        getProcessSuccess: onSuccess,
+        getProcessError: onError
+    }
 });
 
 export const loginUser = (data, onSuccess, onError) => ({
@@ -42,5 +51,5 @@ const setUserInfo = (data) => {
 
 export const logoutUser = () => {
     localStorage.removeItem('USER_INFO');
-    return{ type: constants.RESET_USER_INFO};
+    return{ type: constants.RESET_USER_INFO}
 }
