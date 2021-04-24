@@ -3,6 +3,7 @@ import {
   ERROR_MESSAGE_ADD_POST,
   LOADING_ADD_POST,
   ON_CHANGE_TITLE_POST,
+  REMOVE_ADD_POST_DATA,
 } from "./types";
 
 export const onChangeTitlePost = (value) => {
@@ -13,6 +14,7 @@ export const onChangeTitlePost = (value) => {
 };
 
 export const uploadFile = (formData) => async (dispatch) => {
+  dispatch({ type: LOADING_ADD_POST });
   axios
     .post("url", formData)
     .then((response) => {})
@@ -20,8 +22,11 @@ export const uploadFile = (formData) => async (dispatch) => {
       console.log(e);
       dispatch({
         type: ERROR_MESSAGE_ADD_POST,
-        payload: { input: "file", message: "При загрузке файла что-то пошло не так" },
-      })
+        payload: {
+          input: "file",
+          message: "При загрузке файла что-то пошло не так",
+        },
+      });
     });
 };
 
@@ -40,6 +45,7 @@ export const onClickSubmitPost = (history) => async (dispatch, getState) => {
     .post("url", { title })
     .then((response) => {
       history.push("/");
+      dispatch(removeAddPostData());
     })
     .catch((e) => {
       console.log(e);
@@ -48,4 +54,10 @@ export const onClickSubmitPost = (history) => async (dispatch, getState) => {
         payload: { input: "submitBtn", message: "Произошла какая-то ошибка" },
       });
     });
+};
+
+export const removeAddPostData = () => {
+  return {
+    type: REMOVE_ADD_POST_DATA,
+  };
 };

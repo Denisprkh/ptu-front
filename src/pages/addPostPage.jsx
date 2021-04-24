@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import {
   onChangeTitlePost,
   onClickSubmitPost,
+  removeAddPostData,
   uploadFile,
 } from "../redux/postRedux/actions";
 
@@ -14,6 +15,12 @@ export default function AddPostPage() {
   );
 
   const history = useHistory();
+
+  useEffect(() => {
+    return () => {
+      dispatch(removeAddPostData());
+    };
+  }, [dispatch]);
 
   const _onChangeTitlePost = (e) => {
     dispatch(onChangeTitlePost(e.target.value));
