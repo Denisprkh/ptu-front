@@ -4,6 +4,7 @@ import {
   LOADING_ADD_POST,
   ON_CHANGE_TITLE_POST,
   REMOVE_ADD_POST_DATA,
+  SUCCESS_UPLOAD_FILE,
 } from "./types";
 
 export const onChangeTitlePost = (value) => {
@@ -17,7 +18,9 @@ export const uploadFile = (formData) => async (dispatch) => {
   dispatch({ type: LOADING_ADD_POST });
   axios
     .post("url", formData)
-    .then((response) => {})
+    .then((response) => {
+      dispatch({ type: SUCCESS_UPLOAD_FILE });
+    })
     .catch((e) => {
       console.log(e);
       dispatch({
